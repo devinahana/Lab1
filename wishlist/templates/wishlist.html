@@ -1,27 +1,46 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<h5>Nama: </h5>
-<p>{{nama}}</p>
 
-<table>
-    <tr>
-        <th>Nama Barang</th>
-        <th>Harga Barang</th>
-        <th>Deskripsi</th>
-    </tr>
-    {% comment %} Tambahkan data di bawah baris ini {% endcomment %}
-    {% for barang in list_barang %}
-    <tr>
-        <th>{{barang.nama_barang}}</th>
-        <th>{{barang.harga_barang}}</th>
-        <th>{{barang.deskripsi}}</th>
-    </tr>
-    {% endfor %}
-</table>
+<header style="padding-bottom: 70px">
+    <nav class="navbar navbar-expand-lg bg-light fixed-top">
+        <div class="container-fluid">
+          <a class="navbar-brand" href="#main-table">{{nama}}</a>
+          <button class="navbar-toggler navbar-toggler-right" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ms-auto">
+              <li class="nav-item">
+                <a class="btn btn-primary" href="{% url 'wishlist:logout' %}" role="button">Logout</a>
+                <!-- <button class="btn btn-primary"><a href="{% url 'wishlist:logout' %}">Logout</a></button> -->
+              </li>
+            </ul>
+          </div>
+        </div>
+    </nav>
+</header>
 
-<h5>Sesi terakhir login: {{ last_login }}</h5>
-
-<button><a href="{% url 'wishlist:logout' %}">Logout</a></button>
+<main>
+    <h3 style="margin-top:7px; margin-left:20px; color:rgb(197, 87, 138)" class="font-monospace fw-semibold text-center">My Wishlist</h3>
+    <table id="main-table" style="margin:10px 0px 20px 20px; width:95%;"  class="table table-bordered">
+        <tr style="text-align:center" class="table-danger">
+            <th>Nama Barang</th>
+            <th>Harga Barang</th>
+            <th>Deskripsi</th>
+        </tr>
+        {% comment %} Tambahkan data di bawah baris ini {% endcomment %}
+        {% for barang in list_barang %}
+        <tr>
+            <td>{{barang.nama_barang}}</td>
+            <td>{{barang.harga_barang}}</td>
+            <td>{{barang.deskripsi}}</td>
+        </tr>
+        {% endfor %}
+    </table>
+    
+    <h6 style="margin-left:20px; color:rgb(147, 177, 248)">Sesi terakhir login : {{ last_login }}</h5>
+    
+</main>
 
 {% endblock content %}
