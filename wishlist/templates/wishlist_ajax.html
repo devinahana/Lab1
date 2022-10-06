@@ -83,26 +83,29 @@
         </tr>
         {% endfor %} -->
     </table>
-    <button>Tambah Barang</button>
+    <button onclick="posting()">Tambah Barang</button>
     <h6 style="margin-left:20px; color:rgb(122, 158, 243)">Sesi terakhir login : {{ last_login }}</h5>
     
 </main>
 
 <script>
-    $(document).ready( function(){
-        $("button").click( function(){
-            let namaBarang = $('.nama-barang').val();
-            let hargaBarang = $('.harga-barang').val();
-            let deskripsi = $('.deskripsi').val();
-            let CSRFtoken = $('input[name="csrfmiddlewaretoken"]').val();
-            $.post('/wishlist/ajax/tambah/', {
-                nama_barang: namaBarang,
-                harga_barang: hargaBarang,
-                deskripsi: deskripsi,
-                csrfmiddlewaretoken: CSRFtoken,
+    function posting() {
+
+        $(document).ready( function(){
+            $("button").click( function(){
+                let namaBarang = $('.nama_barang').val();
+                let hargaBarang = $('.harga_barang').val();
+                let deskripsi = $('.deskripsi').val();
+                let CSRFtoken = $('input[name="csrfmiddlewaretoken"]').val();
+                $.post('/wishlist/ajax/tambah/', {
+                    nama_barang: namaBarang,
+                    harga_barang: hargaBarang,
+                    deskripsi: deskripsi,
+                    csrfmiddlewaretoken: CSRFtoken,
+                })
             })
         })
-    })
+    }
 </script>
 
 {% endblock content %}
