@@ -55,6 +55,19 @@
 
 <main>
     <h3 style="margin-top:7px; color:rgb(197, 87, 138)" class="font-monospace fw-semibold text-center">My Wishlist</h3>
+    <div>
+        <form action="" method="POST"> 
+            {% csrf_token %}
+            <label>Nama Barang</label>
+            <input type="text" name="nama_barang" id="nama_barang">
+
+            <label>Harga Barang</label>
+            <input type="text" name="harga_barang" id="harga_barang">
+
+            <label>Deskripsi Barang</label>
+            <input type="text" name="deskripsi" id="deskripsi">
+        </form>
+    </div>
     <table id="main-table" style="margin:10px 0px 20px 20px; width:96%;"  class="table table-bordered">
         <!-- <tr style="text-align:center" class="table-danger">
             <th>Nama Barang</th>
