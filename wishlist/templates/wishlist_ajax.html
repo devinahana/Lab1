@@ -1,0 +1,95 @@
+{% extends 'base.html' %}
+<head>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <!-- <script>
+        async function getWishList() {
+            return fetch('(% url 'wishlist:show_json' ').then);
+        }
+    </script> -->
+    <script>
+        $(document).ready(function(){
+            $.get('/wishlist/json/', function(data) {
+                var stringHTML = `
+                    <tr>
+                        <th>Nama Barang</th>
+                        <th>Harga Barang</th>
+                        <th>Deskripsi</th>
+                    </tr>
+                `;
+
+                for (let i = 0; i < data.length; i++) {
+                    stringHTML += `
+                        <tr>
+                            <td>${data[i].fields.nama_barang}</td> 
+                            <td>${data[i].fields.harga_barang}</td>
+                            <td>${data[i].fields.deskripsi}</td>     
+                        </tr>
+                    `;
+                }
+                document.getElementById("main-table").innerHTML = stringHTML;
+
+            });
+         
+        })
+    </script>
+</head>
+{% block content %}
+
+<header style="padding-bottom: 70px">
+    <nav class="navbar navbar-expand-lg bg-danger bg-gradient bg-opacity-10 fixed-top">
+        <div class="container-fluid">
+          <a class="navbar-brand" href="#main-table">Welcome, {{nama}}</a>
+          <button class="navbar-toggler navbar-toggler-right" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ms-auto">
+              <li class="nav-item">
+                <a class="btn btn-primary" href="{% url 'wishlist:logout' %}" role="button">Logout</a>
+              </li>
+            </ul>
+          </div>
+        </div>
+    </nav>
+</header>
+
+<main>
+    <h3 style="margin-top:7px; color:rgb(197, 87, 138)" class="font-monospace fw-semibold text-center">My Wishlist</h3>
+    <table id="main-table" style="margin:10px 0px 20px 20px; width:96%;"  class="table table-bordered">
+        <!-- <tr style="text-align:center" class="table-danger">
+            <th>Nama Barang</th>
+            <th>Harga Barang</th>
+            <th>Deskripsi</th>
+        </tr>
+        {% comment %} Tambahkan data di bawah baris ini {% endcomment %}
+        {% for barang in list_barang %}
+        <tr>
+            <td>{{barang.nama_barang}}</td>
+            <td>{{barang.harga_barang}}</td>
+            <td>{{barang.deskripsi}}</td>
+        </tr>
+        {% endfor %} -->
+    </table>
+    <button>Tambah Barang</button>
+    <h6 style="margin-left:20px; color:rgb(122, 158, 243)">Sesi terakhir login : {{ last_login }}</h5>
+    
+</main>
+
+<script>
+    $(document).ready( function(){
+        $("button").click( function(){
+            let namaBarang = $('.nama-barang').val();
+            let hargaBarang = $('.harga-barang').val();
+            let deskripsi = $('.deskripsi').val();
+            let CSRFtoken = $('input[name="csrfmiddlewaretoken"]').val();
+            $.post('/wishlist/ajax/tambah/', {
+                nama_barang: namaBarang,
+                harga_barang: hargaBarang,
+                deskripsi: deskripsi,
+                csrfmiddlewaretoken: CSRFtoken,
+            })
+        })
+    })
+</script>
+
+{% endblock content %}
