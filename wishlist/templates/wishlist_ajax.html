@@ -1,39 +1,57 @@
 {% extends 'base.html' %}
+{% block content %}
 <head>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-    <!-- <script>
-        async function getWishList() {
-            return fetch('(% url 'wishlist:show_json' ').then);
-        }
-    </script> -->
     <script>
-        $(document).ready(function(){
-            $.get('/wishlist/json/', function(data) {
-                var stringHTML = `
-                    <tr>
-                        <th>Nama Barang</th>
-                        <th>Harga Barang</th>
-                        <th>Deskripsi</th>
-                    </tr>
-                `;
-
-                for (let i = 0; i < data.length; i++) {
-                    stringHTML += `
-                        <tr>
-                            <td>${data[i].fields.nama_barang}</td> 
-                            <td>${data[i].fields.harga_barang}</td>
-                            <td>${data[i].fields.deskripsi}</td>     
-                        </tr>
-                    `;
-                }
-                document.getElementById("main-table").innerHTML = stringHTML;
-
-            });
-         
+        function posting(e) {
+          e.preventDefault()
+          const namaBarang = $("#nama_barang").val()
+          const hargaBarang = $("#harga_barang").val()
+          const deskripsi = $("#deskripsi").val()
+      
+          const data = {
+            nama_barang: namaBarang,
+            harga_barang: hargaBarang,
+            deskripsi,
+            csrfmiddlewaretoken: "{{ csrf_token }}"
+          }
+      
+          $.ajax({
+            type: 'POST',
+            url: '{% url "wishlist:add_barang_wishlist" %}',
+            data: data, 
+            success: () => {
+              alert("Done!")
+              fetchData()
+            },
+            dataType: 'json'
+          });
+        }
+      
+        function getTable(data) {
+          const table = $("#main-table")
+          table.empty()
+          for (let i = 0; i < data.length; i++) {
+            table.append(`
+              <tr>
+                <td>${data[i].fields.nama_barang}</td>
+                <td>${data[i].fields.harga_barang}</td>
+                <td>${data[i].fields.deskripsi}</td>
+              </tr>
+              `)
+          }
+        }
+      
+        function fetchData() {
+          $.get("/wishlist/json", getTable)
+        }
+      
+        $(document).ready(() => {
+          $("#submit-button").click(posting)
+          fetchData()
         })
     </script>
 </head>
-{% block content %}
 
 <header style="padding-bottom: 70px">
     <nav class="navbar navbar-expand-lg bg-danger bg-gradient bg-opacity-10 fixed-top">
@@ -55,6 +73,16 @@
 
 <main>
     <h3 style="margin-top:7px; color:rgb(197, 87, 138)" class="font-monospace fw-semibold text-center">My Wishlist</h3>
+    <table style="margin:10px 0px 20px 20px; width:96%;"  class="table table-bordered">
+        <thead style="text-align:center" class="table-danger">
+            <th>Nama Barang</th>
+            <th>Harga Barang</th>
+            <th>Deskripsi</th>
+        </thead>
+        <tbody id="main-table">
+
+        </tbody>
+    </table>
     <div>
         <form action="" method="POST"> 
             {% csrf_token %}
@@ -62,50 +90,14 @@
             <input type="text" name="nama_barang" id="nama_barang">
 
             <label>Harga Barang</label>
-            <input type="text" name="harga_barang" id="harga_barang">
+            <input type="number" name="harga_barang" id="harga_barang">
 
             <label>Deskripsi Barang</label>
             <input type="text" name="deskripsi" id="deskripsi">
         </form>
+        <input class="btn btn-dark" type="submit" value="Submit" id="submit-button">
     </div>
-    <table id="main-table" style="margin:10px 0px 20px 20px; width:96%;"  class="table table-bordered">
-        <!-- <tr style="text-align:center" class="table-danger">
-            <th>Nama Barang</th>
-            <th>Harga Barang</th>
-            <th>Deskripsi</th>
-        </tr>
-        {% comment %} Tambahkan data di bawah baris ini {% endcomment %}
-        {% for barang in list_barang %}
-        <tr>
-            <td>{{barang.nama_barang}}</td>
-            <td>{{barang.harga_barang}}</td>
-            <td>{{barang.deskripsi}}</td>
-        </tr>
-        {% endfor %} -->
-    </table>
-    <button onclick="posting()">Tambah Barang</button>
-    <h6 style="margin-left:20px; color:rgb(122, 158, 243)">Sesi terakhir login : {{ last_login }}</h5>
     
+    <!-- <h6 style="margin-left:20px; color:rgb(122, 158, 243)">Sesi terakhir login : {{ last_login }}</h5> -->
 </main>
-
-<script>
-    function posting() {
-
-        $(document).ready( function(){
-            $("button").click( function(){
-                let namaBarang = $('.nama_barang').val();
-                let hargaBarang = $('.harga_barang').val();
-                let deskripsi = $('.deskripsi').val();
-                let CSRFtoken = $('input[name="csrfmiddlewaretoken"]').val();
-                $.post('/wishlist/ajax/tambah/', {
-                    nama_barang: namaBarang,
-                    harga_barang: hargaBarang,
-                    deskripsi: deskripsi,
-                    csrfmiddlewaretoken: CSRFtoken,
-                })
-            })
-        })
-    }
-</script>
-
 {% endblock content %}

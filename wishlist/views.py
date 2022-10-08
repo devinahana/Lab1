@@ -85,6 +85,14 @@ def add_barang_wishlist(request):
         nama_barang = request.POST.get('nama_barang')
         harga_barang = request.POST.get('harga_barang')
         deskripsi = request.POST.get('deskripsi')
-        new_barang = BarangWishlist(nama_barang=nama_barang, harga_barang=harga_barang, deskripsi=deskripsi)
+        new_barang = BarangWishlist(
+            nama_barang=nama_barang, 
+            harga_barang=harga_barang, 
+            deskripsi=deskripsi
+        )
         new_barang.save()
+        return HttpResponse(
+            serializers.serialize("json", [new_barang]),
+            content_type="application/json",
+        )
     return redirect('wishlist:show_ajax')
